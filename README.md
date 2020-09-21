@@ -1,1 +1,1 @@
-# RestroPOS
+# Aarya-Qt

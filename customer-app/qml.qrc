@@ -1,0 +1,29 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>src/authentication.cpp</file>
+        <file>src/authentication.h</file>
+        <file>src/base.cpp</file>
+        <file>src/base.h</file>
+        <file>src/models.cpp</file>
+        <file>src/models.h</file>
+        <file>src/testScript.cpp</file>
+        <file>src/utils.cpp</file>
+        <file>src/utils.h</file>
+        <file>resources/cross.png</file>
+        <file>resources/crosshover.png</file>
+        <file>resources/logo.ico</file>
+        <file>resources/minimize.png</file>
+        <file>resources/minimizehover.png</file>
+        <file>qmldir</file>
+        <file>qtquickcontrols2.conf</file>
+        <file>style.qml</file>
+        <file>UI/qmlComponets/JSONListModel.qml</file>
+        <file>UI/qmlComponets/qmldir</file>
+        <file>resources/logo.png</file>
+        <file>resources/order.png</file>
+        <file>resources/orderHover.png</file>
+        <file>resources/temp.jpg</file>
+        <file>resources/info.png</file>
+    </qresource>
+</RCC>
