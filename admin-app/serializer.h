@@ -19,7 +19,10 @@ class serializer : public QObject
     Q_OBJECT
 public:
     explicit serializer(QObject *parent = nullptr);
-    Q_INVOKABLE int createUser(QString);
+    Q_INVOKABLE int createUser(QString,QString);
+    Q_INVOKABLE int updateUser(QString,QString,QString);
+    Q_INVOKABLE int updateUser(QString,QString,QString,QString);
+    Q_INVOKABLE QString getUser(QString,QString,QString);
     Q_INVOKABLE QString getCategory();
     Q_INVOKABLE QString getCategory(QString, QString, QString);
     Q_INVOKABLE QString getMenuItem(QString, QString, QString);
@@ -52,6 +55,8 @@ public:
     Q_INVOKABLE int passMatch(QString, QString);
     Q_INVOKABLE void createBill(QString);
     Q_INVOKABLE void printPurchaseBill(QString);
+    Q_INVOKABLE int checkUsernameExist(QString);
+
 
 signals:
 

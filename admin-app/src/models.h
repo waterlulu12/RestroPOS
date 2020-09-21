@@ -18,7 +18,7 @@ using namespace std;
 
 class OperatorModel : public BaseModel{
 private:
-    string fields = "username, password, restaurantID";
+    string fields = "username, password, restaurantID, admin, profileImage";
     string table = "operator";
 
 public:
@@ -28,6 +28,8 @@ public:
         init(fields, table);
     }
     OperatorModel(int, string, string, int);
+    int create(string,string);
+    int updateImage(string,string,string,string);
 };
 
 

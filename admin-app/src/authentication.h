@@ -35,15 +35,25 @@ class Authentication{
     protected:
         MYSQL* mysql;
     public:
+        int error;
         Authentication(){
             mysql = mysql_init(0);
-            mysql = mysql_real_connect(mysql, SERVER, UNAME, PWORD, DBNAME, PORT, NULL, 0);
+            try{
+                mysql = mysql_real_connect(mysql, SERVER, UNAME, PWORD, DBNAME, PORT, NULL, 0);
+                if(!mysql){
+                    throw 500; 
+                }
+            }
+            catch(...){
+                error = 1;
+            }
         }
         int authenticate(string, string);
         int passwordMatch(string,string);
         string hashPassword(string);
         int validatePassword(string);
         int validateUsername(string);
+        int checkUsernameExists(string);
         ~Authentication(){
             mysql_close(mysql);
         }

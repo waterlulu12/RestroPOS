@@ -10,6 +10,23 @@ OperatorModel::OperatorModel(int a_id, string a_username, string a_password, int
     restaurantID = a_restaurantID;
 }
 
+int OperatorModel::create(string a_data, string a_image)
+{
+    stringstream queryBuilder;
+    queryBuilder << "INSERT INTO " << table << "(" << fields << ")  VALUES (" << parseString(a_data)
+        << ",\""<< a_image <<"\");";
+    cout<<queryBuilder.str();
+    mysql_query(mysql, queryBuilder.str().c_str());
+    return 1;
+}
+
+int OperatorModel::updateImage(string a_identifier, string a_attribute, string a_data, string a_image) { 
+    stringstream queryBuilder;
+    queryBuilder << "UPDATE " << table << " SET " << parseUpdateString(a_attribute, a_data) << ", profileImage = \"" << a_image << "\"" << " WHERE id= " << a_identifier << ";";
+    mysql_query(mysql, queryBuilder.str().c_str());  
+    return 1;
+}
+
 // Restaurant Model
 RestaurantModel::RestaurantModel(int a_id, string a_Name, string a_Address, long long unsigned int a_contactNo){
     id = a_id;
@@ -83,7 +100,8 @@ int MenuItemsModel::update(string a_identifier, string a_attribute, string a_dat
     queryBuilder << "UPDATE " << table << " SET " << parseUpdateString(a_attribute, a_data) << ", description=\"" << a_description << "\"" << " WHERE id= " << a_identifier << ";";
 
     mysql_query(mysql, queryBuilder.str().c_str());
-    return mysqlErrorCheck(mysql);
+
+    return 1;
 }
 
 
@@ -101,11 +119,9 @@ int MenuItemsModel::update(string a_identifier, string a_attribute, string a_dat
 
 int MenuItemsModel::update(string a_identifier, string a_attribute, string a_data, string a_description, string a_image){
     stringstream queryBuilder;
-    
     queryBuilder << "UPDATE " << table << " SET " << parseUpdateString(a_attribute, a_data) << ", description=\"" << a_description << "\", itemImage=\"" << a_image << "\"" << " WHERE id= " << a_identifier << ";";
-
     mysql_query(mysql, queryBuilder.str().c_str());
-    return mysqlErrorCheck(mysql);
+    return 1;
 }
 
 
@@ -122,7 +138,6 @@ vector<vector<string>> MenuItemsModel::getItemDetails(string m_items){
     MYSQL_RES* res;
     MYSQL_ROW row;
     stringstream queryBuilder;
-
     queryBuilder << "SELECT *" << " FROM " << table << " WHERE";
     for (unsigned int i=1;i<m_id.size();i++){
         queryBuilder << " id = " << m_id[i];
@@ -152,7 +167,7 @@ string MenuItemsModel::getItemDetailsJSON(string m_items){
     if(objArray.size()!=0){
         jsonData = JsonBuilder(csvToArray(fields), objArray);
     }else{
-        jsonData = "";
+        jsonData = "{}";
     }
     return jsonData;
 }
@@ -192,7 +207,7 @@ string SalesModel::retrieveOrders(string a_where_data)
     int num_records = mysql_num_rows(res);
     int i = 0;
     if(num_records == 0){
-        return "";
+        return "{}";
     }
     vector<vector<string> > objArray(num_records, vector<string>(num_fields));
 
@@ -264,7 +279,9 @@ int SalesModel::create(string a_data, string a_csv){
     stringstream queryBuilder;
     queryBuilder << "INSERT INTO " << table << "(" << fields << ") VALUES (" << parseString(a_data) << ", CURRENT_DATE(), CURRENT_TIME()" << ","<< a_csv
                  << ");";
+
     mysql_query(mysql, queryBuilder.str().c_str());
+
     int lastid = mysql_insert_id(mysql);
     return lastid;
 }
@@ -282,7 +299,7 @@ int SalesModel::updateSaleItems(string a_id, string a_data){
     stringstream queryBuilder;
     queryBuilder << "UPDATE " << table << " SET menuItems = \"" << a_data << "\" WHERE id= " << a_id;
     mysql_query(mysql, queryBuilder.str().c_str());
-    return mysqlErrorCheck(mysql);
+    return 1;
 }
 
 
@@ -299,13 +316,15 @@ string SalesModel::getSaleDateBounds(){
     MYSQL_ROW row;
     stringstream queryBuilder;
     queryBuilder << "(SELECT date FROM sales WHERE oComplete= 1 ORDER BY date LIMIT 1) UNION ALL (SELECT date FROM sales WHERE oComplete= 1  ORDER BY date DESC LIMIT 1)";
+
     mysql_query(mysql, queryBuilder.str().c_str());
+
     res = mysql_store_result(mysql);
     int num_fields = mysql_num_fields(res);
     int num_records = mysql_num_rows(res);
     int i = 0;
     if(num_records == 0){
-        return "";
+        return "{}";
     }
     vector<vector<string> > objArray(num_records, vector<string>(num_fields));
 
@@ -346,7 +365,7 @@ string SalesModel::retrieveOrderByDate(string a_start_date, string a_end_date)
     int num_records = mysql_num_rows(res);
     int i = 0;
     if(num_records == 0){
-        return "";
+        return "{}";
     }
     vector<vector<string> > objArray(num_records, vector<string>(num_fields));
 
@@ -378,6 +397,7 @@ string SalesModel::getOrderCount(string a_flag)
     MYSQL_ROW row;
     stringstream queryBuilder;
     queryBuilder << "SELECT COUNT(id) AS count FROM sales WHERE oComplete = \"" << a_flag << "\"";
+
     mysql_query(mysql, queryBuilder.str().c_str());
 
     res = mysql_store_result(mysql);
@@ -386,7 +406,7 @@ string SalesModel::getOrderCount(string a_flag)
     int num_records = mysql_num_rows(res);
     int i = 0;
     if(num_records == 0){
-        return "";
+        return "{}";
     }
     vector<vector<string> > objArray(num_records, vector<string>(num_fields));
 
@@ -428,7 +448,7 @@ string SalesModel::getStatsByDate(string a_start, string a_end){
     int num_records = mysql_num_rows(res);
     int i = 0;
     if(num_records == 0){
-        return "";
+        return "{}";
     }
     vector<vector<string> > objArray(num_records, vector<string>(num_fields));
 

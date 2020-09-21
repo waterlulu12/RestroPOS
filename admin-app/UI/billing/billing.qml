@@ -26,6 +26,7 @@ Item {
     property string name: ""
     property string oId: ""
 
+
     function clearFlags() {
         quant = []
     }
@@ -49,8 +50,6 @@ Item {
         vamt = billdetails.mo[0].vat
         serviceCharge.text = service
         vatText.text = vamt
-        serviceChargeSwitch.checked = true
-        vatChargeSwitch.checked = true
         printBillSample.model = menuLoadID.model
     }
     function showBill(){
@@ -720,76 +719,6 @@ Item {
                         }
                     }
                 }
-            }
-
-            Switch {
-                id: vatChargeSwitch
-                x: 115
-                y: 437
-                display: AbstractButton.IconOnly
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: {
-                        if (parent.checked == true) {
-                            parent.checked = false
-                            gtotaltext.text = (parseFloat(
-                                                   gtotaltext.text) - parseFloat(
-                                                   vamt)).toFixed(1)
-                            vatText.text = 0
-                        } else {
-                            parent.checked = true
-                            gtotaltext.text = (parseFloat(
-                                                   gtotaltext.text) + parseFloat(
-                                                   vamt)).toFixed(1)
-                            vatText.text = vamt
-                        }
-                    }
-                    cursorShape: Qt.PointingHandCursor
-                }
-            }
-
-            Switch {
-                id: serviceChargeSwitch
-                x: 200
-                y: 437
-                display: AbstractButton.IconOnly
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: {
-                        if (parent.checked == true) {
-                            gtotaltext.text = (parseFloat(
-                                                   gtotaltext.text) - parseFloat(
-                                                   service)).toFixed(1)
-                            serviceCharge.text = 0
-                            parent.checked = false
-                        } else {
-                            gtotaltext.text = (parseFloat(
-                                                   gtotaltext.text) + parseFloat(
-                                                   service)).toFixed(1)
-                            serviceCharge.text = service
-                            parent.checked = true
-                        }
-                    }
-                    cursorShape: Qt.PointingHandCursor
-                }
-            }
-
-            Text {
-                x: 173
-                y: 450
-                id: vatSwitchText
-                color: "#ffffff"
-                text: "VAT"
-                font.pointSize: 12
-            }
-
-            Text {
-                x: 255
-                y: 450
-                id: serviceCheckText
-                color: "#ffffff"
-                text: "Service Charge"
-                font.pointSize: 12
             }
 
             Text {

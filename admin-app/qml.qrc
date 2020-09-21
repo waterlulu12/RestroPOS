@@ -71,9 +71,16 @@
         <file>resources/plusHover.png</file>
         <file>resources/tick.png</file>
         <file>resources/tickHover.png</file>
-        <file>src/bill.xls</file>
         <file>resources/logo.png</file>
         <file>resources/print.png</file>
         <file>resources/printhover.png</file>
+        <file>resources/user.png</file>
+        <file>UI/profile/file.qml</file>
+        <file>UI/profile/image-assets/plus.png</file>
+        <file>UI/profile/image-assets/plusHover.png</file>
+        <file>UI/profile/image-assets/submit.png</file>
+        <file>UI/profile/image-assets/submitHover.png</file>
+        <file>UI/profile/image-assets/clear.png</file>
+        <file>UI/profile/image-assets/clearHover.png</file>
     </qresource>
 </RCC>

@@ -10,7 +10,6 @@
 #include <fstream>
 #include <iterator>
 #include <deque>
-#include <direct.h>
 #include <QDir>
 
 #define SERVER "127.0.0.1"
@@ -92,8 +91,6 @@ string parseUpdateString(string, string);
 string pkFinder(string, string, string);
 vector<string> csvToArray(string);
 string JsonBuilder(vector<string>, vector<vector<string>>);
-string currentDate();
-int mysqlErrorCheck(MYSQL*);
 vector<string> splitToArray(stringstream& stream);
 void printBill(string);
 

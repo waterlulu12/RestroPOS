@@ -4,6 +4,7 @@ import QtQuick.Window 2.12
 import QtQuick.Layouts 1.3
 import QtQuick.Controls 2.12
 import QtQuick.Controls.Material 2.12
+import "../qmlComponets"
 import "../../"
 
 Item {
@@ -12,29 +13,48 @@ Item {
     signal setQMLSource(string path)
     function signUpAccount(){
         if(sql.validateUsernameSignUp(sUsernameField.text) === 1){
-            if(sql.validatePasswordSignUp(sPasswordField.text)===1){
-                if(sql.passMatch(sPasswordField.text,confirmPasswordField.text)===1){
-                    sql.createUser(sUsernameField.text + "," + sql.hashPass(sPasswordField.text) + ",1")
-                    sUsernameField.text = ""
-                    sPasswordField.text = ""
-                    confirmPasswordField.text = ""
-                    errorSignup.text = ""
+            if(sql.checkUsernameExist(sUsernameField.text) === 1){
+                if(sql.validatePasswordSignUp(sPasswordField.text) === 1){
+                    if(sql.passMatch(sPasswordField.text,confirmPasswordField.text)===1){
+                        sql.createUser(sUsernameField.text + "," + sql.hashPass(sPasswordField.text) + ",1,0","")
+                        sUsernameField.text = ""
+                        sPasswordField.text = ""
+                        confirmPasswordField.text = ""
+                        errorSignup.text = ""
+                    }else{
+                        errorSignup.text = "*passwords do not match"
+                    }
                 }else{
-                    errorSignup.text = "passwords do not match"
+                    errorSignup.text = "*the password must be 8-16 characters, must contain atleast 1 alphabet, specialcharacter and number"
                 }
             }else{
-                errorSignup.text = "the password must be 8-16 characters, must contain atleast 1 alphabet, specialcharacter and number"
+                errorSignup.text = "*username already exists"
             }
         }else{
-            errorSignup.text = "username should be atleast 6 characters"
+            errorSignup.text = "*username should be atleast 6 characters"
         }
     }
     function loginAccount(){
-        if (sql.loginUser(usernameField.text,passwordField.text)===1) {
+        if (sql.loginUser(usernameField.text,passwordField.text)===1){
+
+            operatorDetails.json = sql.getUser("*","username",usernameField.text)
+            Style.username = operatorDetails.mo[0].username
+            Style.photo = operatorDetails.mo[0].profileImage
+            if(operatorDetails.mo[0].admin==="1"){
+                Style.admin = 1
+            }else{
+                Style.admin = 0
+            }
+
             setQMLSource("UI/dashboard/dashboard.qml")
+
         } else {
-            errorLogin.text = "the login credentials do not match our records."
+            errorLogin.text = "*the login credentials do not match our records."
         }
+    }
+    JSONListModel{
+        id: operatorDetails
+        json: ""
     }
     Rectangle {
         y: 35
@@ -61,7 +81,7 @@ Item {
                     width: 411
                     height: 18
                     text: ""
-                    color: "#ffffff"
+                    color: "#ff0000"
                     smooth: true
                     font.pointSize: 11
                 }
@@ -190,7 +210,7 @@ Item {
                     y: 125
                     width: 411
                     height: 42
-                    color: "#ffffff"
+                    color: "#ff0000"
                     wrapMode: Text.WordWrap
                     smooth: true
                     font.pointSize: 11

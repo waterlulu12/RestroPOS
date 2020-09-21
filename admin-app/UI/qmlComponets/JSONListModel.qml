@@ -15,7 +15,9 @@ Item {
 
         mo=[]
         var objectArray = JSON.parse(json)
-        count = objectArray.length
+        if(json != "{}"){
+            count = objectArray.length
+        }
 
         for (var key in objectArray) {
             var jo = objectArray[key]

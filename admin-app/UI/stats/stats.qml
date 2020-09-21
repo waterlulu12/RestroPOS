@@ -26,7 +26,7 @@ Item {
 
     function getSelect(bound){
         var temp=[]
-        for(var i=0;i<=bound;i++){
+        for(var i=1;i<=bound;i++){
             temp.push(i)
         }
         return temp
@@ -48,8 +48,8 @@ Item {
 
         for ( var key in objectArray ) {
             grossrev += parseInt(objectArray[key].totalPrice)
-            temp = objectArray[key].menuItems
-            totalItemsS += (((temp.match(/,/g) || []).length) + 1)
+            temp = (objectArray[key].quantity).split(",")
+            totalItemsS += temp.reduce((a, b) => parseInt(a) + parseInt(b), 0)
             vatT += parseInt(objectArray[key].vat)
             discounT += parseInt(objectArray[key].discount)
             serviceT += parseInt(objectArray[key].serviceCharge)
@@ -459,7 +459,7 @@ Item {
                   width: 101
                   height: 52
                   color: "#ffffff"
-                  text: "0"
+                  text: totalItemsS
                   smooth: true
                   horizontalAlignment: Text.AlignRight
                   font.family: "QuickSand"
@@ -587,7 +587,7 @@ Item {
                     color: "#ffffff"
                     smooth: true
                     font.family: "Varela Round"
-                    text: qsTr("VAT Total (Rs)")
+                    text: qsTr("VAT Total (Rs):")
                     font.pixelSize: 14
                 }
 

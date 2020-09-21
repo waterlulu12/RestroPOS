@@ -89,12 +89,10 @@ string Base64::encode()
     for(int i = 0; i < buffer_size; i+=3)
     {
         unsigned char separatedBits[4];
-
         separatedBits[0] = buffer[i+0] >>0x2;
         separatedBits[1] = ((buffer[i+0] & 0x3)<<0x4)^(buffer[i+1] >> 0x4);
         separatedBits[2] = ((buffer[i+1] & 0xF)<<0x2)^(buffer[i+2] >> 0x6);
         separatedBits[3] = (buffer[i+2] & 0x3F);
-
         char character;
         for(int j = 0; j <= 3; j++)
         {
@@ -275,9 +273,20 @@ string parseUpdateString(string a_attribute, string a_input){
 
 
 /**
+    * @brief:  Sends error Signals to QT to avoid program Crashes
+    * 
+    * @params: a_table (Table Name to be looked in the Database), a_attribute 
+    *          (Column Name to be looked in the Table), a_data (Value to look for in the Column)
+    * @returns: Empty String or Primary Key (Primary Key if the query successfully executes 
+    *           and retrieves the id from database, and Empty String if not)
+*/
+
+
+
+/**
     * @brief: Function to find the id (Primary Key) in the database that 
     *         matches the defined criteria -> (Table Name, Column Name and Value)
-
+    * 
     * @params: a_table (Table Name to be looked in the Database), a_attribute 
     *          (Column Name to be looked in the Table), a_data (Value to look for in the Column)
     * @returns: Empty String or Primary Key (Primary Key if the query successfully executes 
@@ -376,25 +385,6 @@ string JsonBuilder(vector<string> a_key, vector<vector<string> > a_value){
     jBuilder << "]";
     return jBuilder.str();
 }
-
-
-
-/**
-    * @brief: Function to check for any encountered mysqlErrors that are encountered
-    * 
-    * @params: mysql (mysql object)
-    * @returns: 1 if no erros are found, 0 if errors are found
-*/
-
-int mysqlErrorCheck(MYSQL* mysql){
-    if (strcmp(mysql_error(mysql),"")){
-        return 1;
-    }else{
-        return 0;
-    }
-}
-
-
 
 /**
     * @brief: Function to split a stringstream csv into a vector<string> array

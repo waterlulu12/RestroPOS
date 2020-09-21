@@ -484,7 +484,8 @@ Item {
                     fileLoader.source=path
                 }
                 onFilePath:{
-                    imageFilePath.text = filePath.substr(8)
+                    var filepaths = filePath
+                    imageFilePath.text = filepaths.substr(8)
                     hasfile = 1
                 }
             }

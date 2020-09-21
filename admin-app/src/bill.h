@@ -90,6 +90,8 @@ class Bill
             }else if(itemCount > 30 && itemCount <=60){
                 billData = billTemp.retrieve("bill","id","3")[0][0];
                 max_size = 60;
+            }else{
+                max_size = 0;
             }
             Base64 obj(billData,Base64::DecodeMode);
 

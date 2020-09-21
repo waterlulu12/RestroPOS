@@ -35,6 +35,7 @@ protected:
     MYSQL* mysql;
 
 public:
+    int error;
     int init(string, string);
     int create(string);
     int update(string, string, string);

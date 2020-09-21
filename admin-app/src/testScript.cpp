@@ -29,7 +29,7 @@ int main()
 
         mysql_query(mysql, "CREATE TABLE operator (  id int NOT NULL AUTO_INCREMENT,  username "
                            "varchar(16) NOT NULL,  password varchar(32) DEFAULT NULL,  "
-                           "restaurantID int NOT NULL,  PRIMARY KEY (id), FOREIGN KEY "
+                           "restaurantID int NOT NULL, admin tinyint(1), profileImage mediumtext,PRIMARY KEY (id), FOREIGN KEY "
                            "(restaurantID) REFERENCES restaurant (id) ON DELETE CASCADE ON UPDATE "
                            "CASCADE)");
 

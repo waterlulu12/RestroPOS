@@ -1,7 +1,5 @@
 #include "base.h"
 
-
-
 /**
     * @brief:   Method modeled to be the constructor of the base class
     *           Initializes the values of fields and table to the the fieldname and
@@ -16,7 +14,16 @@ int BaseModel::init(string a_fields, string a_table) {
     fields = a_fields;
     table = a_table;
     mysql = mysql_init(0);
-    mysql = mysql_real_connect(mysql, SERVER, UNAME, PWORD, DBNAME, PORT, NULL, 0);
+    try{
+        mysql = mysql_real_connect(mysql, SERVER, UNAME, PWORD, DBNAME, PORT, NULL, 0);
+        if(!mysql){
+            throw 500;
+        }
+    }
+    catch(...){
+        error = 1;
+        return 0;
+    }
     return 1;
 }
 
@@ -35,8 +42,9 @@ int BaseModel::create(string a_data) {
     stringstream queryBuilder;
     queryBuilder << "INSERT INTO " << table << "(" << fields << ") VALUES (" << parseString(a_data)
         << ");";
+    cout<<queryBuilder.str();
     mysql_query(mysql, queryBuilder.str().c_str());
-    return mysqlErrorCheck(mysql);
+    return 1;
 }
 
 
@@ -55,8 +63,8 @@ int BaseModel::update(string a_identifier, string a_attribute, string a_data) {
     stringstream queryBuilder;
     queryBuilder << "UPDATE " << table << " SET " << parseUpdateString(a_attribute, a_data)
         << " WHERE id= " << a_identifier << ";";
-    mysql_query(mysql, queryBuilder.str().c_str());
-    return mysqlErrorCheck(mysql);
+    mysql_query(mysql, queryBuilder.str().c_str());  
+    return 1;
 }
 
 
@@ -74,9 +82,7 @@ vector<vector<string>> BaseModel::retrieve(string a_attribute) {
     MYSQL_ROW row;
     stringstream queryBuilder;
     queryBuilder << "SELECT " << a_attribute << " FROM " << table;
-
     mysql_query(mysql, queryBuilder.str().c_str());
-
     res = mysql_store_result(mysql);
 
     int num_fields = mysql_num_fields(res);
@@ -113,7 +119,7 @@ string BaseModel::retrieveJSON(string a_attribute) {
         jsonData = JsonBuilder(csvToArray(fields), objArray);
     }
     else {
-        jsonData = "";
+        jsonData = "{}";
     }
     return jsonData;
 }
@@ -139,7 +145,6 @@ vector<vector<string>> BaseModel::retrieve(string a_attribute, string a_where_co
     queryBuilder << "SELECT " << a_attribute << " FROM " << table << " WHERE " << a_where_column << " = \"" << a_where_value << "\"";
 
     mysql_query(mysql, queryBuilder.str().c_str());
-
     res = mysql_store_result(mysql);
 
     int num_fields = mysql_num_fields(res);
@@ -179,7 +184,7 @@ string BaseModel::retrieveJSON(string a_attribute, string a_where_column, string
         jsonData = JsonBuilder(csvToArray(a_attribute), objArray);
     }
     else {
-        jsonData = "";
+        jsonData = "{}";
     }
     return jsonData;
 }
@@ -195,11 +200,8 @@ string BaseModel::retrieveJSON(string a_attribute, string a_where_column, string
 */
 
 int BaseModel::remove(string a_identifier) {
-
-    
-
     stringstream queryBuilder;
     queryBuilder << "DELETE FROM " << table << " WHERE id= " << a_identifier << ";";
     mysql_query(mysql, queryBuilder.str().c_str());
-    return mysqlErrorCheck(mysql);
+    return 1;
 }

@@ -1,4 +1,5 @@
 import QtQuick 2.12
+import QtQml 2.12
 import QtQuick.Window 2.12
 import QtQuick.Layouts 1.3
 import QtQuick.Controls 2.12
@@ -10,6 +11,7 @@ Window {
     visible: true
     width: 1366
     height: 768
+    Material.accent: "#EE394E"
     property int previousX
     property int previousY
     property var orderList: ListModel {}
@@ -19,6 +21,7 @@ Window {
     property var newOrder: ""
     property int i: 0
     property string currCat: "Thakali Snacks"
+    property var currentSelected: []
     flags: Qt.Window | Qt.FramelessWindowHint
 
     function setOrder(name, id, price, discount, mode) {
@@ -123,6 +126,8 @@ Window {
         newOrder = "OT10" + latest
         clear()
         endPopup.open()
+        sidebarError.text = ""
+        customerName.text = ""
     }
 
     function calcTotal() {
@@ -173,7 +178,22 @@ Window {
                     y: 28
                     source: "resources/logo.png"
                 }
+
+                MouseArea{
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: {
+                        currentSelected.state = "close"
+                        currentSelected.color = "#ffffff"
+                        currentSelected = ""
+                        categoryModel.currentIndex = 0
+                        categoryModelList.json = ""
+                        categoryModelList.json = sql.getCategory()
+                    }
+                }
             }
+
             Pane {
                 x: 0
                 y: 107
@@ -195,6 +215,7 @@ Window {
                         id: categoryModelList
                         json: sql.getCategory()
                     }
+
                     model: categoryModelList.model
                     delegate: ItemDelegate {
                         highlighted: ListView.isCurrentItem
@@ -229,6 +250,12 @@ Window {
                             height: 80
                             hoverEnabled: true
                             cursorShape: Qt.PointingHandCursor
+                            onEntered: {textBoxCategory.color="#EE394E"}
+                            onExited: {
+                                if(textBoxCategory.state!="click"){
+                                    textBoxCategory.color=Style.basicColor2
+                                }
+                            }
                             onClicked: {
                                 if (parent.state == "close") {
                                     itemList.json = sql.getMenuItem("*",
@@ -240,6 +267,11 @@ Window {
                                     itemList.json = ""
                                     currentTitle.text = ""
                                 }
+                                textBoxCategory.state = "click"
+                                textBoxCategory.color = "#EE394E"
+                                currentSelected.color = Style.basicColor2
+                                currentSelected.state = ""
+                                currentSelected = textBoxCategory
                                 categoryModel.currentIndex = index
                             }
                         }
@@ -247,6 +279,9 @@ Window {
                 }
             }
         }
+
+
+
 
         Rectangle {
             id: midView
@@ -386,55 +421,56 @@ Window {
             focus: true
             closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
 
-                Image{
-                    id:itemImagePopUp
-                    width: 280
-                    height: 215
-                    x: 10
-                    y: 10
-                }
-                Text {
-                    id: itemNamePopUp
-                    width: 380
-                    height: 70
-                    wrapMode: Text.WordWrap
-                    clip: true
-                    x: 300
-                    y: 10
-                    font.pointSize: 23
-                    smooth: true
-                }
+            Image{
+                id:itemImagePopUp
+                width: 280
+                height: 215
+                x: 10
+                y: 10
+            }
+            Text {
+                id: itemNamePopUp
+                width: 380
+                height: 70
+                wrapMode: Text.WordWrap
+                clip: true
+                x: 300
+                y: 10
+                font.pointSize: 23
+                smooth: true
+            }
 
-                Text {
-                    id: itemCatPopUp
-                    width: 280
-                    height: 200
-                    x: 300
-                    y: 85
-                    font.pointSize: 16
-                    text: currCat
-                    smooth: true
-                }
+            Text {
+                id: itemCatPopUp
+                width: 280
+                height: 200
+                x: 300
+                y: 85
+                font.pointSize: 16
+                text: currCat
+                smooth: true
+            }
 
-                Text {
-                    id: itemPricePopUp
-                    width: 280
-                    height: 200
-                    x: 300
-                    y: 115
-                    font.pointSize: 16
-                    smooth: true
-                }
+            Text {
+                id: itemPricePopUp
+                width: 280
+                height: 200
+                x: 300
+                y: 115
+                font.pointSize: 16
+                smooth: true
+            }
 
-                Text {
-                    id: itemDescriptionPopUp
-                    width: 280
-                    height: 200
-                    x: 300
-                    y: 155
-                    font.pointSize: 14
-                    smooth: true
-                }
+            Text {
+                id: itemDescriptionPopUp
+                width: 280
+                height: 300
+                x: 300
+                y: 155
+                font.pointSize: 14
+                wrapMode: Text.WordWrap
+                smooth: true
+            }
 
         }
 
@@ -673,7 +709,21 @@ Window {
                     smooth: true
                     horizontalAlignment: Text.AlignRight
                 }
+
             }
+
+            Text {
+                id: sidebarError
+                x: 33
+                y: 714
+                width: 260
+                height: 21
+                text: qsTr("")
+                font.pixelSize: 14
+                color: "#ff0000"
+            }
+
+
         }
 
         Image {
@@ -689,9 +739,13 @@ Window {
                 hoverEnabled: true
                 onClicked: {
                     if (orderList.count === 0) {
-
+                        sidebarError.text = "*please select items to place an order"
                     } else {
-                        makeOrder()
+                        if(customerName.text == ""){
+                            sidebarError.text = "*please enter your name to place an order"
+                        }else{
+                            makeOrder()
+                        }
                     }
                 }
                 cursorShape: Qt.PointingHandCursor
@@ -703,6 +757,8 @@ Window {
                 }
             }
         }
+
+
     }
     Popup {
         id: endPopup
@@ -807,6 +863,6 @@ Window {
 
 /*##^##
 Designer {
-    D{i:0;formeditorZoom:0.6600000262260437}
+    D{i:0;formeditorZoom:0.75}
 }
 ##^##*/

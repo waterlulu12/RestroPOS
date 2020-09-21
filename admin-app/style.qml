@@ -2,9 +2,11 @@ pragma Singleton
 import QtQuick 2.0
 
 QtObject{
-
+    property int admin: 0
+    property string username: ""
     property int state : 0
-
+    property var greetings: ["Howdy,","Hello,","Namaste,","Ola,","Welcome,","Hey,","Sup,","Hiya,"]
+    property var greetOffset: [147,120,169,100,169,103,103,110]
     property string mainColor : {change()}
     property string secondaryColor :""
     property string menuSideB : ""
@@ -46,7 +48,7 @@ QtObject{
             color1 = "#E73F3B"
             color2 = "#FFC632"
             color3 = "#55A630"
-            color4 = "#E5E5E5"
+            color4 = "#011627"
             color5 = "#232F5B"
             color6 = "#662E9B"
             color7 = "#ff5400"

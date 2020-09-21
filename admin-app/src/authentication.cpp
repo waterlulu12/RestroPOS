@@ -16,7 +16,12 @@ int Authentication::authenticate(string a_username, string a_password){
     stringstream query;
     string hashedPassword = hashPassword(a_password);
     query << "SELECT * FROM operator WHERE username = \"" << a_username << "\" AND password = \"" << hashedPassword << "\"";
-    mysql_query(mysql, query.str().c_str());
+    try{
+        mysql_query(mysql, query.str().c_str());
+    }
+    catch(...){
+        error = 1;
+    }
     res = mysql_store_result(mysql);
     int num_records = mysql_num_rows(res);
 
@@ -98,7 +103,7 @@ int Authentication::validatePassword(string a_password)
     int specialsFoundFlag=0;
     for(unsigned int i = 0; i < a_password.size(); i++){
         char cur_char = a_password.at(i);
-        if (cur_char >= 48 && cur_char <= 57) 
+        if ((cur_char >= 33 && cur_char <= 47)||(cur_char >= 58 && cur_char <= 64))
         {
             specialsFound += 1;
         }
@@ -126,6 +131,27 @@ int Authentication::validatePassword(string a_password)
 
 int Authentication::validateUsername(string a_username){
     if(a_username.size() >= 6){
+        return 1;
+    }else{
+        return 0;
+    }
+}
+
+int Authentication::checkUsernameExists(string a_username)
+{
+    MYSQL_RES* res;
+    stringstream query;
+    query << "SELECT * FROM operator WHERE username = \"" << a_username << "\"";
+    try{
+        mysql_query(mysql, query.str().c_str());
+    }
+    catch(...){
+        error = 1;
+    }
+    res = mysql_store_result(mysql);
+    int num_records = mysql_num_rows(res);
+
+    if(num_records == 0){
         return 1;
     }else{
         return 0;

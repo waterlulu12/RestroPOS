@@ -5,11 +5,32 @@ serializer::serializer(QObject *parent) : QObject(parent)
 
 }
 
-int serializer::createUser(QString a)
+int serializer::createUser(QString a, QString b)
 {
     OperatorModel obj1;
-    obj1.create(a.toStdString());
+    obj1.create(a.toStdString(), b.toStdString());
     return 1;
+}
+
+int serializer::updateUser(QString a, QString b, QString c)
+{
+    OperatorModel obj1;
+    obj1.update(a.toStdString(), b.toStdString(), c.toStdString());
+    return 1;
+}
+
+int serializer::updateUser(QString a, QString b, QString c, QString d)
+{
+    OperatorModel obj1;
+    Base64 obj(d.toStdString(),Base64::FileMode);
+    obj1.updateImage(a.toStdString(), b.toStdString(), c.toStdString(), obj.encode());
+    return 1;
+}
+
+QString serializer::getUser(QString a, QString b, QString c)
+{
+    OperatorModel obj1;
+    return QString::fromUtf8(obj1.retrieveJSON(a.toStdString(),b.toStdString(),c.toStdString()).c_str());
 }
 
 QString serializer::getCategory(){
@@ -146,6 +167,9 @@ int serializer::deleteSales(QString identifier)
 int serializer::loginUser(QString a, QString b)
 {
     Authentication obj1;
+    if(obj1.error == 1){
+        return 0;
+    }
     return obj1.authenticate(a.toStdString(), b.toStdString());
 }
 
@@ -219,6 +243,12 @@ void serializer::createBill(QString a)
 void serializer::printPurchaseBill(QString a)
 {
     printBill(a.toStdString());
+}
+
+int serializer::checkUsernameExist(QString a)
+{
+    Authentication obj;
+    return obj.checkUsernameExists(a.toStdString());
 }
 
 /**
